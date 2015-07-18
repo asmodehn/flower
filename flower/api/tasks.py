@@ -220,12 +220,13 @@ Get a task result
         if not self.backend_configured(result):
             raise HTTPError(503)
         response = {'task-id': taskid, 'state': result.state}
-        if result.ready():
-            if result.state == states.FAILURE:
-                response.update({'result': self.safe_result(result.result),
-                                 'traceback': result.traceback})
-            else:
-                response.update({'result': self.safe_result(result.result)})
+
+        # Grabbing task progress and custom states
+        response.update({'result': self.safe_result(result.result)})
+
+        if result.ready() and result.state == states.FAILURE:
+            response.update({'result': self.safe_result(result.result),
+                             'traceback': result.traceback})
         self.write(response)
 
 
