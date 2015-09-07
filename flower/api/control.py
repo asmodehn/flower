@@ -35,7 +35,14 @@ class ControlHandler(BaseHandler):
         for method in cls.INSPECT_METHODS:
             futures.append(app.delay(getattr(inspect, method)))
 
-        results = yield futures
+        results = []
+        for i, future in enumerate(futures):
+            if future.exception() is None:
+                fres = yield future
+                results.append(fres)
+            else:
+                logger.warning("Future state : %r except : %r res : %r", future._state, future._exception, future._result)
+                results.append(None)
 
         for i, result in enumerate(results):
             if result is None:
