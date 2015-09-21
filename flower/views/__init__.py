@@ -49,7 +49,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         super(BaseHandler, self).render(*args, **kwargs)
 
     def write_error(self, status_code, **kwargs):
-        if status_code == 404:
+        if status_code in (404, 403):
             message = None
             if 'exc_info' in kwargs and\
                     kwargs['exc_info'][0] == tornado.web.HTTPError:
