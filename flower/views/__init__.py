@@ -9,7 +9,7 @@ from base64 import b64decode
 
 import tornado
 
-from ..utils import template, bugreport
+from ..utils import template, bugreport, prepend_url
 
 from tornado_cors import CorsMixin
 
@@ -43,9 +43,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
     CORS_EXPOSE_HEADERS = 'Location, X-WP-TotalPages'
 
     def render(self, *args, **kwargs):
-        functions = self._get_template_functions()
+        functions = inspect.getmembers(template, inspect.isfunction)
         assert not set(map(lambda x: x[0], functions)) & set(kwargs.keys())
         kwargs.update(functions)
+        kwargs.update(url_prefix=self.application.options.url_prefix)
         super(BaseHandler, self).render(*args, **kwargs)
 
     def write_error(self, status_code, **kwargs):
@@ -123,6 +124,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         "return Celery application object"
         return self.application.capp
 
-    @staticmethod
-    def _get_template_functions():
-        return inspect.getmembers(template, inspect.isfunction)
+    def reverse_url(self, *args):
+        prefix = self.application.options.url_prefix
+        url = super(BaseHandler, self).reverse_url(*args)
+        return prepend_url(url, prefix) if prefix else url

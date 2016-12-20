@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import os
 
-from tornado.web import StaticFileHandler
+from tornado.web import StaticFileHandler, url
 
 from .api import events
 from .api import control
@@ -12,7 +12,7 @@ from .views import auth
 from .views import monitor
 from .views.broker import BrokerView
 from .views.workers import WorkerView
-from .views.tasks import TaskView, TasksView
+from .views.tasks import TaskView, TasksView, TasksDataTable
 from .views.error import NotFoundErrorHandler
 from .views.dashboard import DashboardView, DashboardUpdateHandler
 from .utils import gen_cookie_secret
@@ -22,18 +22,20 @@ settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
     cookie_secret=gen_cookie_secret(),
+    static_url_prefix='/static/',
     login_url='/login',
 )
 
 
 handlers = [
     # App
-    (r"/", DashboardView),
-    (r"/dashboard", DashboardView),
-    (r"/worker/(.+)", WorkerView),
-    (r"/task/(.+)", TaskView),
-    (r"/tasks", TasksView),
-    (r"/broker", BrokerView),
+    url(r"/", DashboardView, name='main'),
+    url(r"/dashboard", DashboardView, name='dashboard'),
+    url(r"/worker/(.+)", WorkerView, name='worker'),
+    url(r"/task/(.+)", TaskView, name='task'),
+    url(r"/tasks", TasksView, name='tasks'),
+    url(r"/tasks/datatable", TasksDataTable),
+    url(r"/broker", BrokerView, name='broker'),
     # Worker API
     (r"/api/workers", workers.ListWorkers),
     (r"/api/worker/shutdown/(.+)", control.WorkerShutDown),
@@ -65,10 +67,11 @@ handlers = [
     (r"/api/task/events/task-failed/(.*)", events.TaskFailed),
     (r"/api/task/events/task-revoked/(.*)", events.TaskRevoked),
     (r"/api/task/events/task-retried/(.*)", events.TaskRetried),
+    (r"/api/task/events/task-custom/(.*)", events.TaskCustom),
     # WebSocket Updates
     (r"/update-dashboard", DashboardUpdateHandler),
     # Monitors
-    (r"/monitor", monitor.Monitor),
+    url(r"/monitor", monitor.Monitor, name='monitor'),
     (r"/monitor/succeeded-tasks", monitor.SucceededTaskMonitor),
     (r"/monitor/failed-tasks", monitor.FailedTaskMonitor),
     (r"/monitor/completion-time", monitor.TimeToCompletionMonitor),

@@ -9,7 +9,6 @@ import celery
 import tornado.web
 
 from tornado import ioloop
-from tornado.netutil import bind_unix_socket
 from tornado.httpserver import HTTPServer
 
 from .api import control
@@ -39,6 +38,7 @@ class Flower(tornado.web.Application):
             persistent=self.options.persistent,
             enable_events=self.options.enable_events,
             io_loop=self.io_loop,
+            max_workers_in_memory=self.options.max_workers,
             max_tasks_in_memory=self.options.max_tasks)
         self.started = False
 
@@ -51,13 +51,15 @@ class Flower(tornado.web.Application):
                         ssl_options=self.ssl_options,
                         xheaders=self.options.xheaders)
         else:
+            from tornado.netutil import bind_unix_socket
             server = HTTPServer(self)
             socket = bind_unix_socket(self.options.unix_socket)
             server.add_socket(socket)
 
         self.io_loop.add_future(
             control.ControlHandler.update_workers(app=self),
-            callback=lambda x: logger.debug('Successfully updated worker cache'))
+            callback=lambda x: logger.debug(
+                'Successfully updated worker cache'))
         self.started = True
         self.io_loop.start()
 
