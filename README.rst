@@ -71,7 +71,7 @@ Or receive task completion events in real-time:
 
 For more info checkout `API Reference`_ and `examples`_.
 
-.. _API Reference: http://flower.readthedocs.org/en/latest/api.html
+.. _API Reference: https://flower.readthedocs.io/en/latest/api.html
 .. _examples: http://nbviewer.ipython.org/urls/raw.github.com/mher/flower/master/docs/api.ipynb
 
 Installation
@@ -102,7 +102,7 @@ Broker URL and other configuration options can be passed through the standard Ce
 
 Or run with unix socket file: ::
 
-    $ flower --unix_socket='/tmp/flower.sock'
+    $ flower --unix_socket=/tmp/flower.sock
 
 
 Documentation
@@ -110,30 +110,8 @@ Documentation
 
 Documentation is available at `Read the Docs`_ and `IPython Notebook Viewer`_
 
-.. _Read the Docs: http://flower.readthedocs.org
+.. _Read the Docs: https://flower.readthedocs.io
 .. _IPython Notebook Viewer: http://nbviewer.ipython.org/urls/raw.github.com/mher/flower/master/docs/api.ipynb
-
-Screenshots
------------
-
-.. image:: https://raw.github.com/mher/flower/master/docs/screenshots/dashboard.png
-   :width: 100%
-
-.. image:: https://raw.github.com/mher/flower/master/docs/screenshots/pool.png
-   :width: 100%
-
-.. image:: https://raw.github.com/mher/flower/master/docs/screenshots/tasks.png
-   :width: 100%
-
-.. image:: https://raw.github.com/mher/flower/master/docs/screenshots/task.png
-   :width: 100%
-
-.. image:: https://raw.github.com/mher/flower/master/docs/screenshots/monitor.png
-   :width: 100%
-
-More screenshots_
-
-.. _screenshots: https://github.com/mher/flower/tree/master/docs/screenshots
 
 License
 -------
@@ -154,9 +132,9 @@ Contributing
 
 If you'd like to contribute, simply fork `the repository`_, commit your
 changes, run the tests (`python -m tests`) and send a pull request.
-Make sure you add yourself to AUTHORS_.
+Make sure you add yourself to CONTRIBUTORS_.
 
 If you are interested in maintaining the project please contact.
 
 .. _`the repository`: https://github.com/mher/flower
-.. _AUTHORS: https://github.com/mher/flower/blob/master/AUTHORS
+.. _CONTRIBUTORS: https://github.com/mher/flower/blob/master/CONTRIBUTORS

@@ -14,7 +14,7 @@ define("port", default=5555,
 define("address", default='',
        help="run on the given address", type=str)
 define("unix_socket", default='',
-       help="Path to unix socket to bind", type=str)
+       help="path to unix socket to bind", type=str)
 define("debug", default=False,
        help="run in debug mode", type=bool)
 define("inspect_timeout", default=1000, type=float,
@@ -29,6 +29,8 @@ define("oauth2_secret", type=str, default=None,
        help="OAuth2 secret (requires --auth)")
 define("oauth2_redirect_uri", type=str, default=None,
        help="OAuth2 redirect uri (requires --auth)")
+define("max_workers", type=int, default=5000,
+       help="maximum number of workers to keep in memory")
 define("max_tasks", type=int, default=10000,
        help="maximum number of tasks to keep in memory")
 define("db", type=str, default='flower',
@@ -55,16 +57,16 @@ define("enable_events", type=bool, default=True,
        help="periodically enable Celery events")
 define("format_task", type=types.FunctionType, default=None,
        help="use custom task formatter")
-define("natural_time", type=bool, default=True,
+define("natural_time", type=bool, default=False,
        help="show time in relative format")
 define("tasks_columns", type=str,
-       default="name,uuid,state,args,kwargs,result,received,started",
-       help="Slugs of columns on /tasks/ page, delimited by comma")
+       default="name,uuid,state,args,kwargs,result,received,started,worker",
+       help="slugs of columns on /tasks/ page, delimited by comma")
 define("auth_provider", default='flower.views.auth.GoogleAuth2LoginHandler',
        help="auth handler class")
+define("url_prefix", type=str, help="base url prefix")
 
 # deprecated options
-define("url_prefix", type=str, help="base url prefix")
 define("inspect", default=False, help="inspect workers", type=bool)
 
 default_options = options

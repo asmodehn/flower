@@ -31,7 +31,10 @@ class DashboardView(BaseHandler):
         broker = app.capp.connection().as_uri()
 
         if refresh:
-            yield ListWorkers.update_workers(app=app)
+            try:
+                yield ListWorkers.update_workers(app=app)
+            except Exception as e:
+                logger.exception('Failed to update workers: %s', e)
 
         workers = {}
         for name, values in events.counter.items():
@@ -42,6 +45,7 @@ class DashboardView(BaseHandler):
             info.update(self._as_dict(worker))
             info.update(status=worker.alive)
             workers[name] = info
+
         self.render("dashboard.html", workers=workers, broker=broker)
 
     @classmethod
@@ -123,6 +127,7 @@ class DashboardUpdateHandler(websocket.WebSocketHandler):
                 active = 'N/A'
 
             workers[name] = dict(
+                name=name,
                 status=worker.alive,
                 active=active,
                 processed=processed,
